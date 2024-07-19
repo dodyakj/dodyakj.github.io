@@ -1,11 +1,12 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Application, CommandHandler, CallbackQueryHandler, MessageHandler, filters, CallbackContext
+from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
+import asyncio
 
 # Token bot Telegram Anda
 TOKEN = '7205709997:AAHimcCBdO0ywROhCfs6yZjZWAQ0CX0QM78'
 
 # URL aplikasi web game Web3 Anda
-WEB3_GAME_URL = 'https://game-previews.gdevelop.io/1721373916641-667408/index.html'
+WEB3_GAME_URL = 'https://will-of-d-0tpv2.kinsta.page'
 
 # Setup aplikasi bot Telegram
 application = Application.builder().token(TOKEN).build()
@@ -23,14 +24,18 @@ async def start(update: Update, context: CallbackContext):
 
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    await update.message.reply_photo(
-        photo='https://img.freepik.com/free-photo/digital-painting-fire-letter-d_1340-36092.jpg?ga=GA1.1.1401649289.1691030348&semt=sph',
-        caption='Welcome to Will Of D universe!',
-    )
-    await update.message.reply_text(
-        'Upgrade your coin, earn more coins, boost your ranking, and get more airdrop rewards! \n \n 🎁Play-to-earn airdrop right now!',
-        reply_markup=reply_markup
-    )
+    try:
+        await update.message.reply_photo(
+            photo='https://img.freepik.com/free-photo/digital-painting-fire-letter-d_1340-36092.jpg?ga=GA1.1.1401649289.1691030348&semt=sph',
+            caption='Welcome to Will Of D universe!',
+        )
+        await update.message.reply_text(
+            'Upgrade your coin, earn more coins, boost your ranking, and get more airdrop rewards! \n \n 🎁Play-to-earn airdrop right now!',
+            reply_markup=reply_markup
+        )
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        await update.message.reply_text("An error occurred while processing your request. Please try again later.")
 
 # Handler untuk pesan yang tidak dikenali
 async def unknown(update: Update, context: CallbackContext):
@@ -40,5 +45,5 @@ async def unknown(update: Update, context: CallbackContext):
 application.add_handler(CommandHandler('start', start))
 application.add_handler(MessageHandler(filters.COMMAND, unknown))
 
-# Menjalankan aplikasi polling untuk bot Telegram
-application.run_polling()
+if __name__ == '__main__':
+    application.run_polling()
