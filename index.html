@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will of D - Tap Game</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .game-container {
+            text-align: center;
+        }
+        .status-bar {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .status-item {
+            font-size: 24px;
+            margin: 0 20px;
+        }
+        .coin-img {
+            width: 100px;
+            height: 100px;
+            display: block;
+            margin: 20px auto;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .coin-img:hover {
+            transform: scale(1.1);
+        }
+        #message {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="status-bar">
+            <div class="status-item">Coins: <span id="coins">0</span></div>
+            <div class="status-item">Level: <span id="level">1</span></div>
+        </div>
+        <img src="https://image.pngaaa.com/678/3020678-middle.png" alt="Coin" class="coin-img" id="tapCoin">
+        <div class="status-bar">
+            <div class="status-item">Energy: <span id="energy">10</span></div>
+        </div>
+        <div id="message"></div>
+    </div>
+
+    <script>
+        let coins = 0;
+        let energy = 10;
+        const maxEnergy = 10;
+        const energyCost = 1;
+        let level = 1;
+        const tapCoin = document.getElementById('tapCoin');
+        const coinsDisplay = document.getElementById('coins');
+        const energyDisplay = document.getElementById('energy');
+        const levelDisplay = document.getElementById('level');
+        const message = document.getElementById('message');
+
+        function updateDisplay() {
+            coinsDisplay.textContent = coins;
+            energyDisplay.textContent = energy;
+            levelDisplay.textContent = level;
+        }
+
+        function regenerateEnergy() {
+            if (energy < maxEnergy) {
+                energy++;
+                updateDisplay();
+            }
+        }
+
+        function levelUp() {
+            const levelUpCost = 10000 * Math.pow(5, level - 1);
+            if (coins >= levelUpCost) {
+                coins -= levelUpCost;
+                level++;
+                message.textContent = "Level up!";
+            } else {
+                message.textContent = "Not enough coins to level up!";
+            }
+            updateDisplay();
+        }
+
+        setInterval(regenerateEnergy, 1000); // Regenerate 1 energy every second
+
+        tapCoin.addEventListener('click', () => {
+            if (energy >= energyCost) {
+                coins++;
+                energy -= energyCost;
+                message.textContent = "";
+                if (coins >= 10000 * Math.pow(5, level - 1)) {
+                    levelUp();
+                }
+            } else {
+                message.textContent = "Not enough energy!";
+            }
+            updateDisplay();
+        });
+
+        updateDisplay();
+    </script>
+</body>
+</html>
