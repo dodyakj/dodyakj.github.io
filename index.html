@@ -69,7 +69,7 @@
         const levelDisplay = document.getElementById('level');
         const message = document.getElementById('message');
         const userInfo = document.getElementById('user-info');
-        const botToken = 'YOUR_TELEGRAM_BOT_TOKEN'; // Ganti dengan token bot kamu
+        const botToken = '7205709997:AAHimcCBdO0ywROhCfs6yZjZWAQ0CX0QM78'; // Ganti dengan token bot kamu
 
         function updateDisplay() {
             coinsDisplay.textContent = coins;
@@ -103,10 +103,14 @@
 
         async function fetchTelegramUserInfo(uid) {
             const url = `https://api.telegram.org/bot${botToken}/getChat?chat_id=${uid}`;
+            console.log(`Fetching data from: ${url}`);
 
             try {
                 const response = await fetch(url);
                 const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
                 return data;
             } catch (error) {
                 console.error('Error fetching Telegram user info:', error);
