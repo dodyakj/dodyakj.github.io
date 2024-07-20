@@ -54,6 +54,7 @@
             <div class="status-item">Energy: <span id="energy">10</span></div>
         </div>
         <div id="message"></div>
+        <div id="user-info" class="status-bar"></div>
     </div>
 
     <script>
@@ -67,6 +68,8 @@
         const energyDisplay = document.getElementById('energy');
         const levelDisplay = document.getElementById('level');
         const message = document.getElementById('message');
+        const userInfo = document.getElementById('user-info');
+        const botToken = 'YOUR_TELEGRAM_BOT_TOKEN'; // Ganti dengan token bot kamu
 
         function updateDisplay() {
             coinsDisplay.textContent = coins;
@@ -93,6 +96,42 @@
             updateDisplay();
         }
 
+        function getUidFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('uid');
+        }
+
+        async function fetchTelegramUserInfo(uid) {
+            const url = `https://api.telegram.org/bot${botToken}/getChat?chat_id=${uid}`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error fetching Telegram user info:', error);
+                return null;
+            }
+        }
+
+        async function displayUserInfo() {
+            const uid = getUidFromUrl();
+
+            if (!uid) {
+                userInfo.textContent = 'No UID found in URL.';
+                return;
+            }
+
+            const userInfoData = await fetchTelegramUserInfo(uid);
+
+            if (userInfoData && userInfoData.ok) {
+                const user = userInfoData.result;
+                userInfo.textContent = `User: ${user.first_name} ${user.last_name || ''} (@${user.username || 'N/A'})`;
+            } else {
+                userInfo.textContent = 'Failed to fetch user info.';
+            }
+        }
+
         setInterval(regenerateEnergy, 1000); // Regenerate 1 energy every second
 
         tapCoin.addEventListener('click', () => {
@@ -110,6 +149,7 @@
         });
 
         updateDisplay();
+        displayUserInfo();
     </script>
 </body>
 </html>
